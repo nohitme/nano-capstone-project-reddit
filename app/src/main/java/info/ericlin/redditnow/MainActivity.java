@@ -1,42 +1,43 @@
 package info.ericlin.redditnow;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
-import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import dagger.android.support.DaggerAppCompatActivity;
+import dagger.android.support.DaggerFragment;
 import javax.inject.Inject;
 import net.dean.jraw.android.SharedPreferencesTokenStore;
 import net.dean.jraw.oauth.AccountHelper;
-import timber.log.Timber;
 
-public class MainActivity extends DaggerAppCompatActivity {
+public class MainActivity extends DaggerAppCompatActivity implements
+    UserlessFragment.OnRedditLoginSuccessListener {
 
-  public static final int REQUEST_CODE = 2191;
+  private static final String FRAGMENT_TAG = "FRAGMENT_TAG";
 
-  @Inject AccountHelper accountHelper;
-  @Inject SharedPreferencesTokenStore tokenStore;
+  @Inject
+  AccountHelper accountHelper;
+  @Inject
+  SharedPreferencesTokenStore tokenStore;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_main);
 
-    View button = findViewById(R.id.main_button);
-    button.setOnClickListener(view -> startOAuthFlow());
-  }
-
-  private void startOAuthFlow() {
-    Intent intent = new Intent(this, RedditOAuthActivity.class);
-    startActivityForResult(intent, REQUEST_CODE);
+    if (getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG) == null) {
+      DaggerFragment fragment =
+          tokenStore.getUsernames().isEmpty() ? new UserlessFragment() : new MainFragment();
+      replaceFragment(fragment);
+    }
   }
 
   @Override
-  protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-    if (requestCode == REQUEST_CODE) {
-      Timber.i("eric, onActivityResult -> %s", resultCode);
-    } else {
-      super.onActivityResult(requestCode, resultCode, data);
-    }
+  public void onLoginSuccess() {
+    replaceFragment(new MainFragment());
+  }
+
+  private void replaceFragment(Fragment fragment) {
+    getSupportFragmentManager().beginTransaction()
+        .replace(R.id.main_fragment_container, fragment, FRAGMENT_TAG)
+        .commitNow();
   }
 }

@@ -2,4 +2,9 @@
   <string name="app_name">Reddit Now</string>
   <string name="oauth_login_success">Login succeeded</string>
   <string name="oauth_login_failed">Login failed. Please try again.</string>
+
+  <string name="userless_authenticate_explanation">
+    Reddit Now! requires authentication with Reddit service before it can read your subreddits.\n\nPlease click the button below to start authentication process.
+  </string>
+  <string name="userless_authenticate">Authenticate</string>
 </resources>
