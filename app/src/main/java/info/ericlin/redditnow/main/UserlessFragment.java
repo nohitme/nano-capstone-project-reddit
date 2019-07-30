@@ -1,4 +1,4 @@
-package info.ericlin.redditnow;
+package info.ericlin.redditnow.main;
 
 import android.app.Activity;
 import android.content.Context;
@@ -13,6 +13,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
+import info.ericlin.redditnow.R;
 import net.dean.jraw.android.SharedPreferencesTokenStore;
 
 /**

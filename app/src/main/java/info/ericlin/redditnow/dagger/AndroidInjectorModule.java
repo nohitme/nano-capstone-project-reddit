@@ -2,10 +2,10 @@ package info.ericlin.redditnow.dagger;
 
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
-import info.ericlin.redditnow.MainActivity;
-import info.ericlin.redditnow.MainFragment;
-import info.ericlin.redditnow.RedditOAuthActivity;
-import info.ericlin.redditnow.UserlessFragment;
+import info.ericlin.redditnow.main.MainActivity;
+import info.ericlin.redditnow.main.MainFragment;
+import info.ericlin.redditnow.main.RedditOAuthActivity;
+import info.ericlin.redditnow.main.UserlessFragment;
 
 @Module
 abstract class AndroidInjectorModule {

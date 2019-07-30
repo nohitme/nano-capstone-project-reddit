@@ -1,4 +1,4 @@
-package info.ericlin.redditnow;
+package info.ericlin.redditnow.main;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
+import info.ericlin.redditnow.R;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -32,10 +33,13 @@ public class RedditOAuthActivity extends DaggerAppCompatActivity {
 
   private final CompositeDisposable disposables = new CompositeDisposable();
 
-  @Inject AccountHelper accountHelper;
-  @BindView(R.id.oauth_web_view) WebView webView;
+  @Inject
+  AccountHelper accountHelper;
+  @BindView(R.id.oauth_web_view)
+  WebView webView;
 
-  @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
+  @Override
+  protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
     setContentView(R.layout.activity_reddit_oauth);
     ButterKnife.bind(this);
@@ -71,7 +75,8 @@ public class RedditOAuthActivity extends DaggerAppCompatActivity {
     webView.loadUrl(authUrl);
   }
 
-  @Override protected void onDestroy() {
+  @Override
+  protected void onDestroy() {
     disposables.clear();
     super.onDestroy();
   }

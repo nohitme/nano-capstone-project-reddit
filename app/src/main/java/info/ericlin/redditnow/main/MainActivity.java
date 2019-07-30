@@ -1,9 +1,10 @@
-package info.ericlin.redditnow;
+package info.ericlin.redditnow.main;
 
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import dagger.android.support.DaggerAppCompatActivity;
 import dagger.android.support.DaggerFragment;
+import info.ericlin.redditnow.R;
 import javax.inject.Inject;
 import net.dean.jraw.android.SharedPreferencesTokenStore;
 import net.dean.jraw.oauth.AccountHelper;

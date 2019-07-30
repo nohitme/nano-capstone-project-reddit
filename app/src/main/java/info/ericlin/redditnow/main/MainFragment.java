@@ -1,4 +1,4 @@
-package info.ericlin.redditnow;
+package info.ericlin.redditnow.main;
 
 import dagger.android.support.DaggerFragment;
 
