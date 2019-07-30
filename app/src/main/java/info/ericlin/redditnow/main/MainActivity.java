@@ -7,15 +7,12 @@ import dagger.android.support.DaggerFragment;
 import info.ericlin.redditnow.R;
 import javax.inject.Inject;
 import net.dean.jraw.android.SharedPreferencesTokenStore;
-import net.dean.jraw.oauth.AccountHelper;
 
 public class MainActivity extends DaggerAppCompatActivity implements
     UserlessFragment.OnRedditLoginSuccessListener {
 
   private static final String FRAGMENT_TAG = "FRAGMENT_TAG";
 
-  @Inject
-  AccountHelper accountHelper;
   @Inject
   SharedPreferencesTokenStore tokenStore;
 
