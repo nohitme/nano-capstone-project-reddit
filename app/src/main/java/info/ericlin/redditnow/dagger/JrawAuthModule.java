@@ -14,14 +14,13 @@ import net.dean.jraw.android.SimpleAndroidLogAdapter;
 import net.dean.jraw.http.LogAdapter;
 import net.dean.jraw.http.SimpleHttpLogger;
 import net.dean.jraw.oauth.AccountHelper;
-import net.dean.jraw.oauth.TokenStore;
 
 @Module
 public abstract class JrawAuthModule {
 
   @Provides
   @Singleton
-  static TokenStore tokenStore(Context context) {
+  static SharedPreferencesTokenStore tokenStore(Context context) {
     SharedPreferencesTokenStore preferencesTokenStore =
         new SharedPreferencesTokenStore(context);
 
@@ -33,7 +32,7 @@ public abstract class JrawAuthModule {
 
   @Provides
   @Singleton
-  static AccountHelper accountHelper(Context context, TokenStore tokenStore) {
+  static AccountHelper accountHelper(Context context, SharedPreferencesTokenStore tokenStore) {
     AccountHelper accountHelper =
         AndroidHelper.accountHelper(appInfoProvider(context), UUID.randomUUID(), tokenStore);
 

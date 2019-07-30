@@ -5,11 +5,17 @@ import android.os.Bundle;
 import android.view.View;
 import androidx.annotation.Nullable;
 import dagger.android.support.DaggerAppCompatActivity;
+import javax.inject.Inject;
+import net.dean.jraw.android.SharedPreferencesTokenStore;
+import net.dean.jraw.oauth.AccountHelper;
 import timber.log.Timber;
 
 public class MainActivity extends DaggerAppCompatActivity {
 
   public static final int REQUEST_CODE = 2191;
+
+  @Inject AccountHelper accountHelper;
+  @Inject SharedPreferencesTokenStore tokenStore;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
