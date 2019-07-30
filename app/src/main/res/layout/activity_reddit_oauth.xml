@@ -1,15 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:orientation="vertical"
+  tools:context=".MainActivity">
+
+  <TextView
+    android:id="@+id/oauth_warning"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    >
+    android:layout_height="wrap_content"
+    android:background="@color/colorPrimaryDark"
+    android:padding="4dp"
+    android:text="@string/oauth_warning"
+    android:textAppearance="@style/TextAppearance.AppCompat.Inverse" />
 
   <WebView
-      android:id="@+id/oauth_web_view"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      />
+    android:id="@+id/oauth_web_view"
+    android:layout_width="match_parent"
+    android:layout_height="0dp"
+    android:layout_weight="1" />
 
-</FrameLayout>
+</LinearLayout>

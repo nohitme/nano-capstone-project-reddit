@@ -7,4 +7,5 @@
     Reddit Now! requires authentication with Reddit service before it can read your subreddits.\n\nPlease click the button below to start authentication process.
   </string>
   <string name="userless_authenticate">Authenticate</string>
+  <string name="oauth_warning">Warning: The web page can be SLOW to respond! Be patient after you click on the button.</string>
 </resources>
