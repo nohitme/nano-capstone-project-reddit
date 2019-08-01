@@ -37,11 +37,6 @@ public class PostEntity {
   @ColumnInfo(name = "comment_count")
   public int commentCount;
 
-  /**
-   * Returns true if users have seen and swiped the post away.
-   *
-   * <p>This is an extra properties added for Reddit Now! app.
-   */
-  @ColumnInfo(name = "is_swiped")
-  public boolean isSwiped;
+  @NonNull
+  public String subreddit;
 }

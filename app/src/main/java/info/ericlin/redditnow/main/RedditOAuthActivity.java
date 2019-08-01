@@ -84,6 +84,7 @@ public class RedditOAuthActivity extends DaggerAppCompatActivity {
   private void startUserChallenge(StatefulAuthHelper helper, String redirectUrl) {
     Observable<Boolean> oauthObservable = Observable.create(emitter -> {
       try {
+        Timber.i("eric, startUserChallenge -> %s", redirectUrl);
         helper.onUserChallenge(redirectUrl);
         emitter.onNext(true);
         emitter.onComplete();

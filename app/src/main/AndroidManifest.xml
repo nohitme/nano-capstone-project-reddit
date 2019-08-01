@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="info.ericlin.redditnow">
 
+  <uses-permission android:name="android.permission.INTERNET" />
+
   <application
       android:name=".RedditNowApp"
       android:allowBackup="true"
@@ -30,7 +32,5 @@
         android:name="net.dean.jraw.android.REDIRECT_URL"
         android:value="https://ericlin.info/redditnow" />
   </application>
-
-  <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

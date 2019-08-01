@@ -1,6 +1,7 @@
 package info.ericlin.redditnow;
 
 import android.app.Application;
+import com.facebook.stetho.Stetho;
 import dagger.android.AndroidInjector;
 import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
@@ -19,6 +20,8 @@ public class RedditNowApp extends Application implements HasAndroidInjector {
         .application(this)
         .build()
         .inject(this);
+
+    Stetho.initializeWithDefaults(this);
 
     Timber.uprootAll();
     Timber.plant(new ThreadNameDebugTree());

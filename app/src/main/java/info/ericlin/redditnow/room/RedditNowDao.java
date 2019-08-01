@@ -14,11 +14,20 @@ public interface RedditNowDao {
   Flowable<List<SubredditEntity>> getAllSubreddits();
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insertSubreddits(SubredditEntity... subredditEntities);
-
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
   void insertSubreddits(List<SubredditEntity> subredditEntities);
 
-  @Query("SELECT * FROM PostEntity WHERE is_swiped IS 1")
-  Flowable<List<PostEntity>> getAllActivePosts();
+  @Query("DELETE FROM SubredditEntity")
+  void deleteAllSubreddits();
+
+  @Query("SELECT * FROM PostEntity")
+  Flowable<List<PostEntity>> getAllPosts();
+
+  @Insert(onConflict = OnConflictStrategy.REPLACE)
+  void insertPosts(List<PostEntity> postEntities);
+
+  @Query("DELETE FROM PostEntity")
+  void deleteAllPost();
+
+  @Query("SELECT id FROM SwipedPostEntity")
+  List<String> getSwipedPostIds();
 }

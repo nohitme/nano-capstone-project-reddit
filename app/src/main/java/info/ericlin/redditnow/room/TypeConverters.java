@@ -3,9 +3,9 @@ package info.ericlin.redditnow.room;
 import androidx.room.TypeConverter;
 import java.util.Date;
 
-public class Converters {
+public class TypeConverters {
 
-  private Converters() {
+  private TypeConverters() {
     //no instance
   }
 
