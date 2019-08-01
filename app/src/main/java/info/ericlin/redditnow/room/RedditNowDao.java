@@ -4,30 +4,50 @@ import androidx.room.Dao;
 import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
+import androidx.room.Transaction;
 import io.reactivex.Flowable;
 import java.util.List;
 
 @Dao
-public interface RedditNowDao {
+public abstract class RedditNowDao {
+
+  // subreddit
 
   @Query("SELECT * FROM SubredditEntity")
-  Flowable<List<SubredditEntity>> getAllSubreddits();
+  public abstract Flowable<List<SubredditEntity>> getAllSubreddits();
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insertSubreddits(List<SubredditEntity> subredditEntities);
+  public abstract void insertSubreddits(List<SubredditEntity> subredditEntities);
 
   @Query("DELETE FROM SubredditEntity")
-  void deleteAllSubreddits();
+  public abstract void deleteAllSubreddits();
+
+  @Transaction
+  public void replaceAllSubreddits(List<SubredditEntity> subredditEntities) {
+    deleteAllSubreddits();
+    insertSubreddits(subredditEntities);
+  }
+
+  // posts
 
   @Query("SELECT * FROM PostEntity")
-  Flowable<List<PostEntity>> getAllPosts();
+  public abstract Flowable<List<PostEntity>> getAllPosts();
+
+  @Query("SELECT * FROM PostEntity WHERE id NOT IN (SELECT id FROM SwipedPostEntity)")
+  public abstract Flowable<List<PostEntity>> getAllActivePosts();
 
   @Insert(onConflict = OnConflictStrategy.REPLACE)
-  void insertPosts(List<PostEntity> postEntities);
+  public abstract void insertPosts(List<PostEntity> postEntities);
 
   @Query("DELETE FROM PostEntity")
-  void deleteAllPost();
+  public abstract void deleteAllPosts();
 
   @Query("SELECT id FROM SwipedPostEntity")
-  List<String> getSwipedPostIds();
+  public abstract List<String> getSwipedPostIds();
+
+  @Transaction
+  public void replaceAllPosts(List<PostEntity> postEntities) {
+    deleteAllPosts();
+    insertPosts(postEntities);
+  }
 }

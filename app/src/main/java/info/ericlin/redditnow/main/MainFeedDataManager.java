@@ -60,7 +60,7 @@ public class MainFeedDataManager {
         .flatMapSingle(this::saveSubreddits)
         .flatMapIterable(entities -> entities)
         .flatMapSingle(subredditEntity -> getPostsForSubreddit(redditClient, subredditEntity))
-        .doOnNext(posts -> Timber.i("get %s posts", posts.size()))
+        .doOnNext(submissions -> Timber.i("get %s submissions", submissions.size()))
         .toList()
         .flatMapCompletable(this::savePosts)
         .onErrorComplete(throwable -> {
@@ -78,7 +78,7 @@ public class MainFeedDataManager {
           FluentIterable.from(submissionLists).transformAndConcat(lists -> lists)
               .transform(EntityConverters::toEntity)
               .toList();
-      redditNowDao.insertPosts(entities);
+      redditNowDao.replaceAllPosts(entities);
     });
   }
 
@@ -86,7 +86,7 @@ public class MainFeedDataManager {
     return Single.fromCallable(() -> {
       List<SubredditEntity> entities =
           FluentIterable.from(subreddits).transform(EntityConverters::toEntity).toList();
-      redditNowDao.insertSubreddits(entities);
+      redditNowDao.replaceAllSubreddits(entities);
       return entities;
     });
   }
@@ -104,6 +104,7 @@ public class MainFeedDataManager {
       SubredditReference subreddit = redditClient.subreddit(subredditEntity.name);
       Iterator<Listing<Submission>> iterator = subreddit.posts().limit(10).build().iterator();
       int count = 0;
+      outerIterator:
       while (iterator.hasNext()) {
         for (Submission submission : iterator.next()) {
           if (swipedIds.contains(submission.getId())) {
@@ -114,12 +115,8 @@ public class MainFeedDataManager {
           count++;
 
           if (count >= NUMBER_OF_ACTIVE_POST_TO_FETCH) {
-            break;
+            break outerIterator;
           }
-        }
-
-        if (count >= NUMBER_OF_ACTIVE_POST_TO_FETCH) {
-          break;
         }
       }
       emitter.onComplete();
@@ -128,9 +125,6 @@ public class MainFeedDataManager {
 
   private Observable<List<Subreddit>> getSubreddits(RedditClient redditClient) {
     return Observable.create(emitter -> {
-      // clear out all subreddits
-      redditNowDao.deleteAllSubreddits();
-
       BarebonesPaginator<Subreddit> subscribed =
           redditClient.me().subreddits("subscriber").build();
 

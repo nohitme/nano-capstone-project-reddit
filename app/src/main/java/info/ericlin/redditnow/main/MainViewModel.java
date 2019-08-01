@@ -15,7 +15,7 @@ public class MainViewModel extends ViewModel {
 
   private final CompositeDisposable disposables = new CompositeDisposable();
   private final RedditNowDao redditNowDao;
-  private MainFeedDataManager mainFeedDataManager;
+  private final MainFeedDataManager mainFeedDataManager;
 
   public MainViewModel(@Provided MainFeedDataManager mainFeedDataManager, @Provided
       RedditNowDatabase redditNowDatabase) {
@@ -26,7 +26,7 @@ public class MainViewModel extends ViewModel {
   }
 
   private void subscribeToPosts() {
-    Disposable disposable = redditNowDao.getAllPosts()
+    Disposable disposable = redditNowDao.getAllActivePosts()
         .subscribeOn(Schedulers.io())
         .subscribe(postEntities -> Timber.i("we have %s active posts", postEntities.size()));
 
