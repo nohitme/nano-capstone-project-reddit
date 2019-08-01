@@ -11,6 +11,7 @@ import io.reactivex.schedulers.Schedulers;
 import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Subreddit;
 import net.dean.jraw.pagination.BarebonesPaginator;
+import net.dean.jraw.references.SubredditReference;
 import timber.log.Timber;
 
 @AutoFactory
@@ -27,12 +28,15 @@ public class MainViewModel extends ViewModel {
   private void loadUserSubreddits() {
     Disposable disposable = Single.fromCallable(
         () -> {
-          BarebonesPaginator<Subreddit> popular = redditClient.userSubreddits("popular").build();
-          return FluentIterable.from(popular).toList();
+          BarebonesPaginator<Subreddit> popular = redditClient.me().subreddits("subscriber").build();
+          return FluentIterable.from(popular.next()).toList();
         })
         .subscribeOn(Schedulers.io())
         .subscribe(list -> {
-          Timber.i("eric, loadUserSubreddits -> %s", list);
+          for (Subreddit subreddit : list) {
+            SubredditReference reference = redditClient.subreddit(subreddit.getName());
+            Timber.i("eric, ref: %s", reference.about().getTitle());
+          }
         });
 
     disposables.add(disposable);

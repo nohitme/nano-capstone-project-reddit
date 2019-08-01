@@ -41,6 +41,12 @@ dependencies {
     compileOnly "com.google.auto.factory:auto-factory:1.0-beta6"
     annotationProcessor "com.google.auto.factory:auto-factory:1.0-beta6"
 
+    def version_room = "2.1.0"
+
+    implementation "androidx.room:room-runtime:$version_room"
+    annotationProcessor "androidx.room:room-compiler:$version_room"
+    implementation "androidx.room:room-rxjava2:$version_room"
+
     def version_auto_moshi = "0.4.5"
     annotationProcessor "com.ryanharter.auto.value:auto-value-moshi:$version_auto_moshi"
     compileOnly "com.ryanharter.auto.value:auto-value-moshi-annotations:$version_auto_moshi"
