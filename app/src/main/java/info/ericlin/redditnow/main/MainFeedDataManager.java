@@ -22,6 +22,7 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.models.TimePeriod;
 import net.dean.jraw.pagination.BarebonesPaginator;
 import net.dean.jraw.references.SubredditReference;
 import timber.log.Timber;
@@ -35,7 +36,9 @@ import timber.log.Timber;
 @Singleton
 public class MainFeedDataManager {
 
-  private static final int NUMBER_OF_ACTIVE_POST_TO_FETCH = 7;
+  private static final int NUMBER_OF_ACTIVE_POST_TO_STORE = 7;
+  private static final int NUMBER_OF_ACTIVE_POST_TO_FETCH =
+      (int) (NUMBER_OF_ACTIVE_POST_TO_STORE * 1.5);
 
   private final CompositeDisposable disposables = new CompositeDisposable();
   private final RedditClientWrapper redditClientWrapper;
@@ -102,7 +105,13 @@ public class MainFeedDataManager {
       Set<String> swipedIds = Sets.newHashSet(redditNowDao.getSwipedPostIds());
 
       SubredditReference subreddit = redditClient.subreddit(subredditEntity.name);
-      Iterator<Listing<Submission>> iterator = subreddit.posts().limit(10).build().iterator();
+      Iterator<Listing<Submission>> iterator =
+          subreddit.posts()
+              .timePeriod(TimePeriod.DAY)
+              .limit(NUMBER_OF_ACTIVE_POST_TO_FETCH)
+              .build()
+              .iterator();
+
       int count = 0;
       outerIterator:
       while (iterator.hasNext()) {
@@ -114,7 +123,7 @@ public class MainFeedDataManager {
           emitter.onNext(submission);
           count++;
 
-          if (count >= NUMBER_OF_ACTIVE_POST_TO_FETCH) {
+          if (count >= NUMBER_OF_ACTIVE_POST_TO_STORE) {
             break outerIterator;
           }
         }
