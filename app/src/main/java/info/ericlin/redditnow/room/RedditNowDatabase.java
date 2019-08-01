@@ -6,7 +6,7 @@ import androidx.room.RoomDatabase;
 
 @Database(entities = {
     SubredditEntity.class, PostEntity.class, SwipedPostEntity.class
-}, version = 1)
+}, version = 2)
 @androidx.room.TypeConverters({ TypeConverters.class })
 public abstract class RedditNowDatabase extends RoomDatabase {
 

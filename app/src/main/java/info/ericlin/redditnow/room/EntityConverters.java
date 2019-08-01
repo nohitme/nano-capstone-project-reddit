@@ -19,6 +19,7 @@ public class EntityConverters {
     entity.name = subreddit.getName();
     entity.numberOfSubscribers = subreddit.getSubscribers();
     entity.title = subreddit.getTitle();
+    entity.keyColor = subreddit.getKeyColor();
     return entity;
   }
 

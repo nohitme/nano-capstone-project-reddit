@@ -28,4 +28,8 @@ public class SubredditEntity {
 
   @NonNull
   public String description;
+
+  @ColumnInfo(name = "key_color")
+  @Nullable
+  public String keyColor;
 }
