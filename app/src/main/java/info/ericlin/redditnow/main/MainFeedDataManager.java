@@ -60,7 +60,6 @@ public class MainFeedDataManager {
         .flatMapIterable(entities -> entities)
         .flatMapSingle(subredditEntity -> getPostsForSubreddit(redditClient, subredditEntity))
         .doOnNext(submissions -> Timber.i("get %s submissions", submissions.size()))
-        .toList()
         .flatMapCompletable(this::savePosts)
         .onErrorComplete(throwable -> {
           Timber.w(throwable, "failed to update home feed");
@@ -68,13 +67,12 @@ public class MainFeedDataManager {
         });
   }
 
-  private Completable savePosts(List<List<Submission>> submissionLists) {
+  private Completable savePosts(List<Submission> submissionLists) {
     return Completable.fromAction(() -> {
-      List<PostEntity> entities =
-          FluentIterable.from(submissionLists).transformAndConcat(lists -> lists)
+      List<PostEntity> entities = FluentIterable.from(submissionLists)
               .transform(EntityConverters::toEntity)
               .toList();
-      redditNowDao.replaceAllPosts(entities);
+      redditNowDao.insertPosts(entities);
     });
   }
 
