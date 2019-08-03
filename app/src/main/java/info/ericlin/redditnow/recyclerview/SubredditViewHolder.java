@@ -34,7 +34,7 @@ public class SubredditViewHolder extends RedditViewHolder<SubredditEntity> {
 
   @Override
   protected void bind(@NonNull SubredditEntity item) {
-    itemView.setOnClickListener(view -> getEventBus().post(OnSubredditClickEvent.create(item)));
+    itemView.setOnClickListener(view -> getEventBus().post(OnClickSubredditEvent.create(item)));
 
     Context context = itemView.getContext();
 
@@ -67,12 +67,12 @@ public class SubredditViewHolder extends RedditViewHolder<SubredditEntity> {
   }
 
   @AutoValue
-  public static abstract class OnSubredditClickEvent {
+  public static abstract class OnClickSubredditEvent {
 
     public abstract SubredditEntity subreddit();
 
-    public static OnSubredditClickEvent create(SubredditEntity subreddit) {
-      return new AutoValue_SubredditViewHolder_OnSubredditClickEvent(subreddit);
+    public static OnClickSubredditEvent create(SubredditEntity subreddit) {
+      return new AutoValue_SubredditViewHolder_OnClickSubredditEvent(subreddit);
     }
   }
 }

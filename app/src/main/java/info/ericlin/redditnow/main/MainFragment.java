@@ -24,6 +24,8 @@ import info.ericlin.redditnow.R;
 import info.ericlin.redditnow.recyclerview.PostViewHolder;
 import info.ericlin.redditnow.recyclerview.RedditListAdapter;
 import info.ericlin.redditnow.recyclerview.RedditListItem;
+import info.ericlin.redditnow.recyclerview.SubredditViewHolder;
+import info.ericlin.redditnow.subreddit.SubredditActivity;
 import javax.inject.Inject;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -108,6 +110,12 @@ public class MainFragment extends DaggerFragment {
     if (intent != null) {
       startActivity(intent);
     }
+  }
+
+  @Subscribe(threadMode = ThreadMode.MAIN)
+  public void onClickSubredditEvent(SubredditViewHolder.OnClickSubredditEvent event) {
+    Intent intent = SubredditActivity.newIntent(requireContext(), event.subreddit().name);
+    startActivity(intent);
   }
 
   private final ItemTouchHelper itemTouchHelper =
