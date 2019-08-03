@@ -14,15 +14,15 @@ import net.dean.jraw.android.SimpleAndroidLogAdapter;
 import net.dean.jraw.http.LogAdapter;
 import net.dean.jraw.http.SimpleHttpLogger;
 import net.dean.jraw.oauth.AccountHelper;
+import okhttp3.OkHttpClient;
 
 @Module
-public abstract class JrawAuthModule {
+abstract class JrawAuthModule {
 
   @Provides
   @Singleton
   static SharedPreferencesTokenStore tokenStore(Context context) {
-    SharedPreferencesTokenStore preferencesTokenStore =
-        new SharedPreferencesTokenStore(context);
+    SharedPreferencesTokenStore preferencesTokenStore = new SharedPreferencesTokenStore(context);
 
     preferencesTokenStore.load();
     preferencesTokenStore.setAutoPersist(true);
@@ -32,9 +32,11 @@ public abstract class JrawAuthModule {
 
   @Provides
   @Singleton
-  static AccountHelper accountHelper(Context context, SharedPreferencesTokenStore tokenStore) {
+  static AccountHelper accountHelper(Context context, SharedPreferencesTokenStore tokenStore,
+      OkHttpClient okHttpClient) {
     AccountHelper accountHelper =
-        AndroidHelper.accountHelper(appInfoProvider(context), UUID.randomUUID(), tokenStore);
+        AndroidHelper.accountHelper(appInfoProvider(context), UUID.randomUUID(), tokenStore,
+            okHttpClient);
 
     accountHelper.onSwitch(redditClient -> {
       LogAdapter logAdapter = new SimpleAndroidLogAdapter(Log.DEBUG);

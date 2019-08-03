@@ -1,5 +1,6 @@
 package info.ericlin.redditnow.main;
 
+import androidx.annotation.NonNull;
 import com.google.common.collect.FluentIterable;
 import com.google.common.collect.Sets;
 import info.ericlin.redditnow.room.EntityConverters;
@@ -7,11 +8,10 @@ import info.ericlin.redditnow.room.PostEntity;
 import info.ericlin.redditnow.room.RedditNowDao;
 import info.ericlin.redditnow.room.RedditNowDatabase;
 import info.ericlin.redditnow.room.SubredditEntity;
+import info.ericlin.redditnow.settings.PreferenceManager;
 import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
-import io.reactivex.disposables.CompositeDisposable;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import java.util.Iterator;
 import java.util.List;
@@ -22,6 +22,7 @@ import net.dean.jraw.RedditClient;
 import net.dean.jraw.models.Listing;
 import net.dean.jraw.models.Submission;
 import net.dean.jraw.models.Subreddit;
+import net.dean.jraw.models.SubredditSort;
 import net.dean.jraw.models.TimePeriod;
 import net.dean.jraw.pagination.BarebonesPaginator;
 import net.dean.jraw.references.SubredditReference;
@@ -36,28 +37,23 @@ import timber.log.Timber;
 @Singleton
 public class MainFeedDataManager {
 
-  private static final int NUMBER_OF_ACTIVE_POST_TO_STORE = 7;
-  private static final int NUMBER_OF_ACTIVE_POST_TO_FETCH =
-      (int) (NUMBER_OF_ACTIVE_POST_TO_STORE * 1.5);
-
-  private final CompositeDisposable disposables = new CompositeDisposable();
   private final RedditClientWrapper redditClientWrapper;
   private final RedditNowDao redditNowDao;
+  private final PreferenceManager preferenceManager;
 
   @Inject
-  public MainFeedDataManager(RedditClientWrapper redditClientWrapper,
-      RedditNowDatabase redditNowDatabase) {
+  MainFeedDataManager(RedditClientWrapper redditClientWrapper, RedditNowDatabase redditNowDatabase,
+      PreferenceManager preferenceManager) {
     this.redditClientWrapper = redditClientWrapper;
-    redditNowDao = redditNowDatabase.redditNowDao();
+    this.redditNowDao = redditNowDatabase.redditNowDao();
+    this.preferenceManager = preferenceManager;
   }
 
-  public void updateHomeFeed() {
-    // cancel all ongoing tasks
-    disposables.clear();
-
+  @NonNull
+  public Completable updateHomeFeed() {
     RedditClient redditClient = redditClientWrapper.get();
 
-    Disposable disposable = getSubreddits(redditClient)
+    return getSubreddits(redditClient)
         .doOnNext(subreddits -> Timber.i("get %s subreddits", subreddits.size()))
         .subscribeOn(Schedulers.io())
         .flatMapSingle(this::saveSubreddits)
@@ -69,10 +65,7 @@ public class MainFeedDataManager {
         .onErrorComplete(throwable -> {
           Timber.w(throwable, "failed to update home feed");
           return true;
-        })
-        .subscribe();
-
-    disposables.add(disposable);
+        });
   }
 
   private Completable savePosts(List<List<Submission>> submissionLists) {
@@ -105,10 +98,15 @@ public class MainFeedDataManager {
       Set<String> swipedIds = Sets.newHashSet(redditNowDao.getSwipedPostIds());
 
       SubredditReference subreddit = redditClient.subreddit(subredditEntity.name);
+
+      int numberPostToPrefetch = preferenceManager.getNumberPostToPrefetch();
+      int queryLimit = (int) (numberPostToPrefetch * 1.5);
+
       Iterator<Listing<Submission>> iterator =
           subreddit.posts()
+              .sorting(SubredditSort.HOT)
               .timePeriod(TimePeriod.DAY)
-              .limit(NUMBER_OF_ACTIVE_POST_TO_FETCH)
+              .limit(queryLimit)
               .build()
               .iterator();
 
@@ -123,7 +121,7 @@ public class MainFeedDataManager {
           emitter.onNext(submission);
           count++;
 
-          if (count >= NUMBER_OF_ACTIVE_POST_TO_STORE) {
+          if (count >= numberPostToPrefetch) {
             break outerIterator;
           }
         }

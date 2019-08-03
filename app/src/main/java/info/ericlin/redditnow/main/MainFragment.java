@@ -1,5 +1,6 @@
 package info.ericlin.redditnow.main;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,16 +8,22 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
-import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
 import info.ericlin.redditnow.R;
+import info.ericlin.redditnow.recyclerview.PostViewHolder;
+import info.ericlin.redditnow.recyclerview.RedditListAdapter;
+import info.ericlin.redditnow.recyclerview.RedditListItem;
 import javax.inject.Inject;
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Displays a list of subreddits that the user follows and top N posts of each subreddit.
@@ -32,30 +39,22 @@ public class MainFragment extends DaggerFragment {
   @BindView(R.id.main_recycler_view)
   RecyclerView recyclerView;
 
+  @BindView(R.id.main_swipe_refresh)
+  SwipeRefreshLayout swipeRefreshLayout;
+
   @Inject
-  MainViewModelFactory mainViewModelFactory;
+  ViewModelProvider.Factory viewModelFactory;
+
+  @Inject
+  EventBus eventBus;
 
   private MainViewModel mainViewModel;
+  private RedditListAdapter redditListAdapter;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
-    mainViewModel = createMainViewModel();
-  }
-
-  @NonNull
-  private MainViewModel createMainViewModel() {
-    return ViewModelProviders.of(this, new ViewModelProvider.Factory() {
-      @NonNull
-      @Override
-      public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-        if (modelClass == MainViewModel.class) {
-          return (T) mainViewModelFactory.create();
-        }
-
-        throw new IllegalArgumentException("unknown model class: " + modelClass);
-      }
-    }).get(MainViewModel.class);
+    mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(MainViewModel.class);
   }
 
   @Nullable
@@ -69,9 +68,22 @@ public class MainFragment extends DaggerFragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     unbinder = ButterKnife.bind(this, view);
+    //eventBus.register(this);
 
     toolbar.setTitle(R.string.app_name);
-    toolbar.setNavigationOnClickListener(v -> requireActivity().finish());
+    toolbar.setTitleTextColor(Color.WHITE);
+
+    redditListAdapter = new RedditListAdapter(eventBus);
+    recyclerView.setAdapter(redditListAdapter);
+    recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
+    itemTouchHelper.attachToRecyclerView(recyclerView);
+
+    mainViewModel.getRedditListItemLiveData()
+        .observe(getViewLifecycleOwner(), redditListAdapter::submitList);
+
+    mainViewModel.isLoadingLiveData()
+        .observe(getViewLifecycleOwner(), swipeRefreshLayout::setRefreshing);
+    swipeRefreshLayout.setOnRefreshListener(() -> mainViewModel.updateHomeFeed());
   }
 
   @Override
@@ -80,5 +92,33 @@ public class MainFragment extends DaggerFragment {
     if (unbinder != null) {
       unbinder.unbind();
     }
+    eventBus.unregister(this);
   }
+
+  private final ItemTouchHelper itemTouchHelper =
+      new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, 0) {
+
+        @Override
+        public int getSwipeDirs(@NonNull RecyclerView recyclerView,
+            @NonNull RecyclerView.ViewHolder viewHolder) {
+          if (viewHolder instanceof PostViewHolder) {
+            return ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+          }
+
+          return 0;
+        }
+
+        @Override
+        public boolean onMove(@NonNull RecyclerView recyclerView,
+            @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+          return false;
+        }
+
+        @Override
+        public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+          int adapterPosition = viewHolder.getAdapterPosition();
+          RedditListItem redditListItem = redditListAdapter.getItem(adapterPosition);
+          mainViewModel.markPostAsRead(redditListItem.getId());
+        }
+      });
 }

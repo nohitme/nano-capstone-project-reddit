@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:layout_marginTop="4dp"
+  android:layout_marginBottom="4dp"
+  android:background="?selectableItemBackground"
+  android:elevation="12dp">
+
+  <androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="12dp"
+    android:paddingBottom="12dp">
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/post_guide_left"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      app:layout_constraintGuide_begin="12dp" />
+
+    <androidx.constraintlayout.widget.Guideline
+      android:id="@+id/post_guide_right"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="vertical"
+      app:layout_constraintGuide_end="12dp" />
+
+    <TextView
+      android:id="@+id/post_username"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:maxLines="1"
+      android:textColor="@color/vh_light_grey"
+      app:layout_constraintEnd_toStartOf="@id/post_created_at"
+      app:layout_constraintHorizontal_bias="0"
+      app:layout_constraintHorizontal_chainStyle="spread_inside"
+      app:layout_constraintStart_toStartOf="@id/post_guide_left"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:text="u/nohitme" />
+
+    <TextView
+      android:id="@+id/post_created_at"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:maxLines="1"
+      android:textColor="@color/vh_light_grey"
+      app:layout_constraintEnd_toEndOf="@id/post_guide_right"
+      app:layout_constraintStart_toEndOf="@id/post_username"
+      app:layout_constraintTop_toTopOf="parent"
+      tools:text="3h ago" />
+
+    <TextView
+      android:id="@+id/post_text"
+      style="@style/TextAppearance.MaterialComponents.Headline6"
+      android:layout_width="0dp"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="8dp"
+      android:ellipsize="end"
+      android:maxLines="6"
+      app:layout_constrainedWidth="true"
+      app:layout_constraintEnd_toEndOf="@id/post_guide_right"
+      app:layout_constraintStart_toStartOf="@id/post_guide_left"
+      app:layout_constraintTop_toBottomOf="@id/post_username"
+      tools:text="@tools:sample/lorem/random" />
+
+    <ImageView
+      android:id="@+id/post_image"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_marginTop="12dp"
+      android:contentDescription="@null"
+      android:importantForAccessibility="no"
+      android:scaleType="centerCrop"
+      app:layout_constraintDimensionRatio="16:9"
+      app:layout_constraintEnd_toEndOf="parent"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/post_text"
+      tools:src="@tools:sample/backgrounds/scenic" />
+
+    <TextView
+      android:id="@+id/post_comment_count"
+      style="@style/TextAppearance.MaterialComponents.Subtitle2"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="12dp"
+      android:drawableStart="@drawable/ic_chat_black_24dp"
+      android:drawablePadding="8dp"
+      app:layout_constraintBottom_toBottomOf="parent"
+      app:layout_constraintEnd_toEndOf="@id/post_guide_right"
+      app:layout_constraintHorizontal_bias="1"
+      app:layout_constraintStart_toStartOf="parent"
+      app:layout_constraintTop_toBottomOf="@id/post_image"
+      tools:text="218321" />
+
+  </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

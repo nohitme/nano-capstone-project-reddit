@@ -1,7 +1,10 @@
 package info.ericlin.redditnow.room;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import com.google.common.collect.FluentIterable;
 import net.dean.jraw.models.Submission;
+import net.dean.jraw.models.SubmissionPreview;
 import net.dean.jraw.models.Subreddit;
 
 public class EntityConverters {
@@ -32,9 +35,22 @@ public class EntityConverters {
     postEntity.createdAt = submission.getCreated();
     postEntity.subreddit = submission.getSubreddit();
     postEntity.text = submission.getSelfText();
-    postEntity.thumbnailImageUrl = submission.getThumbnail();
     postEntity.title = submission.getTitle();
     postEntity.url = submission.getUrl();
+    postEntity.thumbnailImageUrl = getThumbnailImage(submission);
     return postEntity;
+  }
+
+  @Nullable
+  private static String getThumbnailImage(@NonNull Submission submission) {
+    if (submission.getPreview() != null) {
+      SubmissionPreview.ImageSet imageSet =
+          FluentIterable.from(submission.getPreview().getImages()).first().orNull();
+      if (imageSet != null) {
+        return imageSet.getSource().getUrl();
+      }
+    }
+
+    return submission.getThumbnail();
   }
 }

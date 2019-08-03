@@ -13,6 +13,7 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import javax.inject.Singleton;
+import org.greenrobot.eventbus.EventBus;
 
 @Module
 public abstract class AppModule {
@@ -42,5 +43,11 @@ public abstract class AppModule {
 
     return new ThreadPoolExecutor(CORE_POOL_SIZE, MAXIMUM_POOL_SIZE, KEEP_ALIVE,
         TimeUnit.SECONDS, new LinkedBlockingDeque<>(128), threadFactory);
+  }
+
+  // don't use singleton, limit to injection site.
+  @Provides
+  static EventBus eventBus(ThreadPoolExecutor threadPoolExecutor) {
+    return EventBus.builder().executorService(threadPoolExecutor).build();
   }
 }

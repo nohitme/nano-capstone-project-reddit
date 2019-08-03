@@ -32,6 +32,8 @@ dependencies {
     implementation 'net.dean.jraw:JRAW-Android:1.1.0'
 
     implementation 'com.facebook.stetho:stetho:1.5.1'
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    implementation 'com.jakewharton.threetenabp:threetenabp:1.2.1'
 
     def version_lifecycle = "2.0.0"
     implementation "androidx.lifecycle:lifecycle-extensions:$version_lifecycle"

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content"
+  android:background="?selectableItemBackground"
+  android:padding="12dp">
+
+  <TextView
+    android:id="@+id/subreddit_name"
+    style="@style/TextAppearance.MaterialComponents.Subtitle2"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:maxLines="1"
+    app:layout_constrainedWidth="true"
+    app:layout_constraintBottom_toTopOf="@id/subreddit_num_subs"
+    app:layout_constraintEnd_toStartOf="@id/subreddit_right_arrow"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:text="r/Android" />
+
+  <TextView
+    android:id="@+id/subreddit_num_subs"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:maxLines="1"
+    android:textSize="12sp"
+    app:layout_constrainedWidth="true"
+    app:layout_constraintBottom_toTopOf="@id/subreddit_description"
+    app:layout_constraintEnd_toStartOf="@id/subreddit_right_arrow"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/subreddit_name"
+    tools:text="123, 34 subscribers" />
+
+  <TextView
+    android:id="@+id/subreddit_description"
+    style="@style/TextAppearance.MaterialComponents.Body2"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+    android:maxLines="3"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/subreddit_num_subs"
+    tools:text="@tools:sample/lorem/random" />
+
+  <ImageView
+    android:id="@+id/subreddit_right_arrow"
+    android:layout_width="20dp"
+    android:layout_height="20dp"
+    android:layout_marginEnd="24dp"
+    android:contentDescription="@null"
+    android:importantForAccessibility="no"
+    android:src="@drawable/ic_arrow_forward_black_24dp"
+    app:layout_constraintBottom_toBottomOf="@id/subreddit_num_subs"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toTopOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

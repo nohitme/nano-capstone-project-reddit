@@ -8,4 +8,12 @@
   </string>
   <string name="userless_authenticate">Authenticate</string>
   <string name="oauth_warning">Warning: The web page can be SLOW to respond! Be patient after you click on the button.</string>
+
+  <string name="vh_subreddit_name">r/%1$s</string>
+  <string name="vh_subreddit_members">%1$d members</string>
+  <string name="vh_post_username">u/%1$s</string>
+  <string name="vh_duration_days">%1$dd ago</string>
+  <string name="vh_duration_hours">%1$dh ago</string>
+  <string name="vh_duration_minutes">%1$dm ago</string>
+  <string name="all_caught_up">All Caught Up!</string>
 </resources>
