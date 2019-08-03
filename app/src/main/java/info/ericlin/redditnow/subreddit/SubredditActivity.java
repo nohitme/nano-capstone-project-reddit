@@ -57,15 +57,18 @@ public class SubredditActivity extends DaggerAppCompatActivity {
   @Override
   protected void onCreate(@Nullable Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    checkState(getIntent().hasExtra(EXTRA_SUB_NAME));
+
     setContentView(R.layout.activity_subreddit);
     ButterKnife.bind(this);
 
-    checkState(getIntent().hasExtra(EXTRA_SUB_NAME));
+    String subredditName = getIntent().getStringExtra(EXTRA_SUB_NAME);
+    toolbar.setTitle(getString(R.string.vh_subreddit_name, subredditName));
+
     subredditViewModel =
         ViewModelProviders.of(this, viewModelFactory).get(SubredditViewModel.class);
 
     if (savedInstanceState == null) {
-      String subredditName = getIntent().getStringExtra(EXTRA_SUB_NAME);
       subredditViewModel.loadSubreddit(subredditName);
     }
   }

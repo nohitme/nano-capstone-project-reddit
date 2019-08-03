@@ -5,6 +5,9 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.CookieManager;
+import android.webkit.WebChromeClient;
+import android.webkit.WebResourceError;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Toast;
@@ -35,6 +38,7 @@ public class RedditOAuthActivity extends DaggerAppCompatActivity {
 
   @Inject
   AccountHelper accountHelper;
+
   @BindView(R.id.oauth_web_view)
   WebView webView;
 
@@ -46,6 +50,8 @@ public class RedditOAuthActivity extends DaggerAppCompatActivity {
 
     webView.clearCache(true);
     webView.clearHistory();
+    webView.getSettings().setDomStorageEnabled(true);
+    webView.setWebChromeClient(new WebChromeClient());
 
     CookieManager.getInstance().removeAllCookies(null);
     CookieManager.getInstance().flush();
@@ -64,6 +70,13 @@ public class RedditOAuthActivity extends DaggerAppCompatActivity {
           webView.setVisibility(View.GONE);
           startUserChallenge(helper, url);
         }
+      }
+
+      @Override
+      public void onReceivedError(WebView view, WebResourceRequest request,
+          WebResourceError error) {
+        super.onReceivedError(view, request, error);
+        Timber.i("eric, onReceivedError -> %s", error);
       }
     });
 

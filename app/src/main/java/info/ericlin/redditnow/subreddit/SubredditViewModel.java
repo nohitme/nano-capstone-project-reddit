@@ -5,15 +5,14 @@ import androidx.lifecycle.ViewModel;
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import info.ericlin.redditnow.main.RedditClientWrapper;
-import net.dean.jraw.RedditClient;
 
 @AutoFactory
 public class SubredditViewModel extends ViewModel {
 
-  private final RedditClient redditClient;
+  private RedditClientWrapper redditClientWrapper;
 
   public SubredditViewModel(@Provided RedditClientWrapper redditClientWrapper) {
-    redditClient = redditClientWrapper.get();
+    this.redditClientWrapper = redditClientWrapper;
   }
 
   void loadSubreddit(@NonNull String subredditName) {

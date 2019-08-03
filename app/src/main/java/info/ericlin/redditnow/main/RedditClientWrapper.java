@@ -25,6 +25,10 @@ public class RedditClientWrapper {
 
   @NonNull
   public RedditClient get() {
+    if (accountHelper.isAuthenticated()) {
+      return accountHelper.getReddit();
+    }
+
     Preconditions.checkArgument(!tokenStore.getUsernames().isEmpty(),
         "must have a least one authenticated user");
 
