@@ -24,4 +24,8 @@ public class PreferenceManager {
   public final int getNumberPostToShow() {
     return sharedPreferences.getInt("number_of_show", 3);
   }
+
+  public final boolean isRedditAppPreferred() {
+    return sharedPreferences.getBoolean("prefer_reddit_app", true);
+  }
 }

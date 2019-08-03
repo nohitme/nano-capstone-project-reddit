@@ -4,8 +4,9 @@
   xmlns:tools="http://schemas.android.com/tools"
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
-  android:background="?selectableItemBackground"
-  android:padding="12dp">
+  android:foreground="?selectableItemBackground"
+  android:padding="12dp"
+  tools:targetApi="m">
 
   <TextView
     android:id="@+id/subreddit_name"

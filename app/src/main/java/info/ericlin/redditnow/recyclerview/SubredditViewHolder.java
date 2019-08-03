@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.google.auto.value.AutoValue;
 import com.google.common.base.Strings;
 import info.ericlin.redditnow.R;
 import info.ericlin.redditnow.room.SubredditEntity;
@@ -33,6 +34,7 @@ public class SubredditViewHolder extends RedditViewHolder<SubredditEntity> {
 
   @Override
   protected void bind(@NonNull SubredditEntity item) {
+    itemView.setOnClickListener(view -> getEventBus().post(OnSubredditClickEvent.create(item)));
 
     Context context = itemView.getContext();
 
@@ -62,5 +64,15 @@ public class SubredditViewHolder extends RedditViewHolder<SubredditEntity> {
     }
 
     return Color.BLACK;
+  }
+
+  @AutoValue
+  public static abstract class OnSubredditClickEvent {
+
+    public abstract SubredditEntity subreddit();
+
+    public static OnSubredditClickEvent create(SubredditEntity subreddit) {
+      return new AutoValue_SubredditViewHolder_OnSubredditClickEvent(subreddit);
+    }
   }
 }

@@ -10,6 +10,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.google.auto.value.AutoValue;
 import com.google.common.base.Strings;
 import info.ericlin.redditnow.R;
 import info.ericlin.redditnow.room.PostEntity;
@@ -45,6 +46,8 @@ public class PostViewHolder extends RedditViewHolder<PostEntity> {
 
   @Override
   protected void bind(@NonNull PostEntity item) {
+    itemView.setOnClickListener(view -> getEventBus().post(OnClickPostEvent.create(item)));
+
     if (item.thumbnailImageUrl == null || !URLUtil.isValidUrl(item.thumbnailImageUrl)) {
       postImage.setVisibility(View.GONE);
     } else {
@@ -94,5 +97,15 @@ public class PostViewHolder extends RedditViewHolder<PostEntity> {
     }
 
     return context.getString(R.string.vh_duration_minutes, between.toMinutes());
+  }
+
+  @AutoValue
+  public static abstract class OnClickPostEvent {
+
+    public abstract PostEntity post();
+
+    public static OnClickPostEvent create(PostEntity post) {
+      return new AutoValue_PostViewHolder_OnClickPostEvent(post);
+    }
   }
 }

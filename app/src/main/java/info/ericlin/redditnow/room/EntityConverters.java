@@ -36,7 +36,7 @@ public class EntityConverters {
     postEntity.subreddit = submission.getSubreddit();
     postEntity.text = submission.getSelfText();
     postEntity.title = submission.getTitle();
-    postEntity.url = submission.getUrl();
+    postEntity.url = "https://www.reddit.com" + submission.getPermalink();
     postEntity.thumbnailImageUrl = getThumbnailImage(submission);
     return postEntity;
   }

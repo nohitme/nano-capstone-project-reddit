@@ -1,5 +1,6 @@
 package info.ericlin.redditnow.main;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -18,12 +19,15 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 import dagger.android.support.DaggerFragment;
+import info.ericlin.redditnow.ExternalRedditIntentBuilder;
 import info.ericlin.redditnow.R;
 import info.ericlin.redditnow.recyclerview.PostViewHolder;
 import info.ericlin.redditnow.recyclerview.RedditListAdapter;
 import info.ericlin.redditnow.recyclerview.RedditListItem;
 import javax.inject.Inject;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 /**
  * Displays a list of subreddits that the user follows and top N posts of each subreddit.
@@ -48,6 +52,9 @@ public class MainFragment extends DaggerFragment {
   @Inject
   EventBus eventBus;
 
+  @Inject
+  ExternalRedditIntentBuilder externalRedditIntentBuilder;
+
   private MainViewModel mainViewModel;
   private RedditListAdapter redditListAdapter;
 
@@ -68,7 +75,7 @@ public class MainFragment extends DaggerFragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     unbinder = ButterKnife.bind(this, view);
-    //eventBus.register(this);
+    eventBus.register(this);
 
     toolbar.setTitle(R.string.app_name);
     toolbar.setTitleTextColor(Color.WHITE);
@@ -93,6 +100,14 @@ public class MainFragment extends DaggerFragment {
       unbinder.unbind();
     }
     eventBus.unregister(this);
+  }
+
+  @Subscribe(threadMode = ThreadMode.MAIN)
+  public void onClickPostEvent(PostViewHolder.OnClickPostEvent event) {
+    Intent intent = externalRedditIntentBuilder.buildIntent(event.post().url);
+    if (intent != null) {
+      startActivity(intent);
+    }
   }
 
   private final ItemTouchHelper itemTouchHelper =
