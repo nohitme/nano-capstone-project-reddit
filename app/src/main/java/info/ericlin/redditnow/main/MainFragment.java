@@ -18,13 +18,16 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import dagger.android.support.DaggerFragment;
+import info.ericlin.redditnow.EventBusUtils;
 import info.ericlin.redditnow.ExternalRedditIntentBuilder;
 import info.ericlin.redditnow.R;
 import info.ericlin.redditnow.recyclerview.PostViewHolder;
 import info.ericlin.redditnow.recyclerview.RedditListAdapter;
 import info.ericlin.redditnow.recyclerview.RedditListItem;
 import info.ericlin.redditnow.recyclerview.SubredditViewHolder;
+import info.ericlin.redditnow.search.SearchActivity;
 import info.ericlin.redditnow.subreddit.SubredditActivity;
 import javax.inject.Inject;
 import org.greenrobot.eventbus.EventBus;
@@ -47,6 +50,9 @@ public class MainFragment extends DaggerFragment {
 
   @BindView(R.id.main_swipe_refresh)
   SwipeRefreshLayout swipeRefreshLayout;
+
+  @BindView(R.id.main_fab)
+  FloatingActionButton floatingActionButton;
 
   @Inject
   ViewModelProvider.Factory viewModelFactory;
@@ -77,15 +83,31 @@ public class MainFragment extends DaggerFragment {
   public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
     super.onViewCreated(view, savedInstanceState);
     unbinder = ButterKnife.bind(this, view);
-    eventBus.register(this);
+    EventBusUtils.registerEventBusWithLifecycle(eventBus, getViewLifecycleOwner(), this);
 
     toolbar.setTitle(R.string.app_name);
     toolbar.setTitleTextColor(Color.WHITE);
+
+    floatingActionButton.setOnClickListener(fab -> {
+      Intent intent = new Intent(getContext(), SearchActivity.class);
+      startActivity(intent);
+    });
 
     redditListAdapter = new RedditListAdapter(eventBus);
     recyclerView.setAdapter(redditListAdapter);
     recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
     itemTouchHelper.attachToRecyclerView(recyclerView);
+    recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+      @Override
+      public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+        super.onScrolled(recyclerView, dx, dy);
+        if (dy > 0 && floatingActionButton.getVisibility() == View.VISIBLE) {
+          floatingActionButton.hide();
+        } else if (dy < 0 && floatingActionButton.getVisibility() != View.VISIBLE) {
+          floatingActionButton.show();
+        }
+      }
+    });
 
     mainViewModel.getRedditListItemLiveData()
         .observe(getViewLifecycleOwner(), redditListAdapter::submitList);
@@ -101,7 +123,6 @@ public class MainFragment extends DaggerFragment {
     if (unbinder != null) {
       unbinder.unbind();
     }
-    eventBus.unregister(this);
   }
 
   @Subscribe(threadMode = ThreadMode.MAIN)

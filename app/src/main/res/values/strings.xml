@@ -16,4 +16,9 @@
   <string name="vh_duration_hours">%1$dh ago</string>
   <string name="vh_duration_minutes">%1$dm ago</string>
   <string name="all_caught_up">All Caught Up!</string>
+  <string name="menu_search">Search</string>
+  <string name="search_query_hint">search subreddits</string>
+  <string name="search_empty_query_warning">Query text cannot be empty</string>
+  <string name="subreddit_follow">Follow subreddit</string>
+  <string name="subreddit_unfollow">Stop following subreddit</string>
 </resources>

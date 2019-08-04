@@ -22,6 +22,7 @@
     </activity>
     <activity android:name=".main.RedditOAuthActivity" />
     <activity android:name=".subreddit.SubredditActivity" />
+    <activity android:name=".search.SearchActivity" />
 
     <meta-data
         android:name="net.dean.jraw.android.REDDIT_USERNAME"

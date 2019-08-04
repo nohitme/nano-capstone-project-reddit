@@ -2,27 +2,46 @@ package info.ericlin.redditnow.subreddit;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.webkit.URLUtil;
 import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.common.base.Strings;
 import dagger.android.support.DaggerAppCompatActivity;
+import info.ericlin.redditnow.EventBusUtils;
 import info.ericlin.redditnow.ExternalRedditIntentBuilder;
 import info.ericlin.redditnow.R;
+import info.ericlin.redditnow.recyclerview.LoadingDummyViewHolder;
+import info.ericlin.redditnow.recyclerview.PostViewHolder;
+import info.ericlin.redditnow.recyclerview.RedditListAdapter;
+import info.ericlin.redditnow.recyclerview.UiUtils;
+import info.ericlin.redditnow.room.SubredditEntity;
 import javax.inject.Inject;
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+import timber.log.Timber;
 
 import static com.google.common.base.Preconditions.checkState;
 
 public class SubredditActivity extends DaggerAppCompatActivity {
 
+  private static final String DEFAULT_BANNER_URL =
+      "https://redditupvoted.files.wordpress.com/2017/02/upvoted_banner-green-plain.jpg";
   private static final String EXTRA_SUB_NAME = "EXTRA_SUB_NAME";
 
   @BindView(R.id.subreddit_toolbar)
@@ -69,7 +88,56 @@ public class SubredditActivity extends DaggerAppCompatActivity {
         ViewModelProviders.of(this, viewModelFactory).get(SubredditViewModel.class);
 
     if (savedInstanceState == null) {
-      subredditViewModel.loadSubreddit(subredditName);
+      subredditViewModel.init(subredditName);
+    }
+
+    swipeRefreshLayout.setOnRefreshListener(() -> subredditViewModel.init(subredditName));
+
+    RedditListAdapter redditListAdapter = new RedditListAdapter(eventBus);
+    recyclerView.setAdapter(redditListAdapter);
+    recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+    subredditViewModel.getListLiveData().observe(this, redditListAdapter::submitList);
+    subredditViewModel.getInitialLoadingLiveData().observe(this, swipeRefreshLayout::setRefreshing);
+    subredditViewModel.getSubredditEntityLiveData().observe(this, this::updateHeader);
+
+    EventBusUtils.registerEventBusWithLifecycle(eventBus, this, this);
+  }
+
+  private void updateHeader(SubredditEntity subredditEntity) {
+    int color = ContextCompat.getColor(this, R.color.colorAccent);
+    if (!Strings.isNullOrEmpty(subredditEntity.keyColor)) {
+      try {
+        color = Color.parseColor(subredditEntity.keyColor);
+      } catch (Exception e) {
+        Timber.w(e, "failed to parse color");
+      }
+    }
+
+    color = UiUtils.lighten(color, 0.5f);
+    ColorDrawable colorDrawable = new ColorDrawable(color);
+
+    String imageUrl = DEFAULT_BANNER_URL;
+    if (URLUtil.isValidUrl(Strings.nullToEmpty(subredditEntity.bannerImageUrl))) {
+      imageUrl = subredditEntity.bannerImageUrl;
+    }
+
+    Glide.with(this)
+        .load(imageUrl)
+        .apply(new RequestOptions().error(colorDrawable))
+        .into(imageView);
+  }
+
+  @Subscribe
+  public void onLoadingViewBoundEvent(LoadingDummyViewHolder.OnLoadingViewBoundEvent event) {
+    subredditViewModel.loadNextPage();
+  }
+
+  @Subscribe(threadMode = ThreadMode.MAIN)
+  public void onClickPostEvent(PostViewHolder.OnClickPostEvent event) {
+    Intent intent = externalRedditIntentBuilder.buildIntent(event.post().url);
+    if (intent != null) {
+      startActivity(intent);
     }
   }
 }

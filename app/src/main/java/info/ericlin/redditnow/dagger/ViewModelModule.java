@@ -7,6 +7,8 @@ import dagger.Module;
 import dagger.Provides;
 import info.ericlin.redditnow.main.MainViewModel;
 import info.ericlin.redditnow.main.MainViewModelFactory;
+import info.ericlin.redditnow.search.SearchViewModel;
+import info.ericlin.redditnow.search.SearchViewModelFactory;
 import info.ericlin.redditnow.subreddit.SubredditViewModel;
 import info.ericlin.redditnow.subreddit.SubredditViewModelFactory;
 import javax.inject.Provider;
@@ -19,7 +21,8 @@ abstract class ViewModelModule {
   @Singleton
   static ViewModelProvider.Factory factory(
       Provider<MainViewModelFactory> mainViewModelFactoryProvider,
-      Provider<SubredditViewModelFactory> subredditViewModelFactoryProvider) {
+      Provider<SubredditViewModelFactory> subredditViewModelFactoryProvider,
+      Provider<SearchViewModelFactory> searchViewModelFactoryProvider) {
 
     return new ViewModelProvider.Factory() {
       @NonNull
@@ -29,6 +32,8 @@ abstract class ViewModelModule {
           return (T) mainViewModelFactoryProvider.get().create();
         } else if (modelClass == SubredditViewModel.class) {
           return (T) subredditViewModelFactoryProvider.get().create();
+        } else if (modelClass == SearchViewModel.class) {
+          return (T) searchViewModelFactoryProvider.get().create();
         }
 
         throw new IllegalArgumentException("unknown model class: " + modelClass);

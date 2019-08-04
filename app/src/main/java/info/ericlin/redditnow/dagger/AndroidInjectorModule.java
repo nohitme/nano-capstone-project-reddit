@@ -6,6 +6,7 @@ import info.ericlin.redditnow.main.MainActivity;
 import info.ericlin.redditnow.main.MainFragment;
 import info.ericlin.redditnow.main.RedditOAuthActivity;
 import info.ericlin.redditnow.main.UserlessFragment;
+import info.ericlin.redditnow.search.SearchActivity;
 import info.ericlin.redditnow.subreddit.SubredditActivity;
 
 @Module
@@ -25,4 +26,7 @@ abstract class AndroidInjectorModule {
 
   @ContributesAndroidInjector
   abstract SubredditActivity subredditActivity();
+
+  @ContributesAndroidInjector
+  abstract SearchActivity searchActivity();
 }
