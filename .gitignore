@@ -44,7 +44,8 @@ captures/
 .externalNativeBuild
 
 # Google Services (e.g. APIs or Firebase)
-google-services.json
+# we need to upload this for udacity (this is not a real project)
+# google-services.json
 
 # Freeline
 freeline.py

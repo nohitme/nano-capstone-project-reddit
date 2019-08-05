@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "582884032923",
+    "firebase_url": "https://reddit-now-579ca.firebaseio.com",
+    "project_id": "reddit-now-579ca",
+    "storage_bucket": "reddit-now-579ca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:582884032923:android:b6d84c1cf2616a29",
+        "android_client_info": {
+          "package_name": "info.ericlin.redditnow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "582884032923-h481rjm186u32u31q15r0bpb7906b5o0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "info.ericlin.redditnow",
+            "certificate_hash": "395c1effd68ffc9f0989f60e5aface00f322caff"
+          }
+        },
+        {
+          "client_id": "582884032923-ck6akajjvkbgi6u81ejoia0poser0rot.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCmJrOTcY7PX9O-zvKUUWBmx1VPoLNooCE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "582884032923-ck6akajjvkbgi6u81ejoia0poser0rot.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
