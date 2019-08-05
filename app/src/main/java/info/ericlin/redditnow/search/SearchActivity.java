@@ -17,6 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import dagger.android.support.DaggerAppCompatActivity;
 import info.ericlin.redditnow.EventBusUtils;
 import info.ericlin.redditnow.R;
@@ -44,6 +45,9 @@ public class SearchActivity extends DaggerAppCompatActivity {
 
   @Inject
   EventBus eventBus;
+
+  @Inject
+  FirebaseAnalytics firebaseAnalytics;
 
   private SearchViewModel searchViewModel;
 
@@ -115,6 +119,9 @@ public class SearchActivity extends DaggerAppCompatActivity {
   }
 
   private void performQuery(String query) {
+    Bundle bundle = new Bundle();
+    bundle.putString("search_term", query);
+    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.SEARCH, bundle);
     searchViewModel.searchSubreddits(query);
   }
 

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import androidx.room.Room;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import dagger.Binds;
 import dagger.Module;
 import dagger.Provides;
@@ -49,5 +50,10 @@ public abstract class AppModule {
   @Provides
   static EventBus eventBus(ThreadPoolExecutor threadPoolExecutor) {
     return EventBus.builder().executorService(threadPoolExecutor).build();
+  }
+
+  @Provides
+  static FirebaseAnalytics firebaseAnalytics(Context context) {
+    return FirebaseAnalytics.getInstance(context);
   }
 }

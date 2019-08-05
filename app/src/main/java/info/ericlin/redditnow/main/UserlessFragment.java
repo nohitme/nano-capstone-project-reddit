@@ -12,8 +12,10 @@ import androidx.annotation.Nullable;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.Unbinder;
+import com.google.firebase.analytics.FirebaseAnalytics;
 import dagger.android.support.DaggerFragment;
 import info.ericlin.redditnow.R;
+import javax.inject.Inject;
 import net.dean.jraw.android.SharedPreferencesTokenStore;
 
 /**
@@ -25,6 +27,9 @@ import net.dean.jraw.android.SharedPreferencesTokenStore;
 public class UserlessFragment extends DaggerFragment {
 
   private static final int REQUEST_CODE = 38121;
+
+  @Inject
+  FirebaseAnalytics firebaseAnalytics;
 
   @Nullable
   private Unbinder unbinder;
@@ -69,6 +74,7 @@ public class UserlessFragment extends DaggerFragment {
 
   @OnClick(R.id.userless_authenticate_button)
   void onButtonClicked() {
+    firebaseAnalytics.logEvent(FirebaseAnalytics.Event.LOGIN, null);
     Intent intent = new Intent(requireContext(), RedditOAuthActivity.class);
     startActivityForResult(intent, REQUEST_CODE);
   }
