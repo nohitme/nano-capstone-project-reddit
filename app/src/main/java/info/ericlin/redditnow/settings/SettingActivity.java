@@ -7,6 +7,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import dagger.android.support.DaggerAppCompatActivity;
 import info.ericlin.redditnow.R;
+import info.ericlin.redditnow.widget.SubredditWidgetProvider;
 import io.reactivex.Completable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -64,6 +65,7 @@ public class SettingActivity extends DaggerAppCompatActivity {
         .observeOn(AndroidSchedulers.mainThread())
         .subscribe(() -> {
           setResult(SETTINGS_LOGOUT);
+          SubredditWidgetProvider.updateWidget(this);
           finish();
         });
 

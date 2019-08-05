@@ -34,8 +34,10 @@
   <string name="pref_account_summary">Currently logged in as %1$s</string>
   <string name="pref_account_message">Do you really want to log out?</string>
   <string name="pref_account_yes">Yes, I do!</string>
+    <string name="widget_empty_message">Please log in to view subreddits.</string>
+    <string name="widget_title">Subreddits</string>
 
-  <string-array name="number_show_entries">
+    <string-array name="number_show_entries">
     <item>1 posts</item>
     <item>2 posts</item>
     <item>3 posts</item>

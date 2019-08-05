@@ -5,46 +5,51 @@ import androidx.room.Insert;
 import androidx.room.OnConflictStrategy;
 import androidx.room.Query;
 import androidx.room.Transaction;
-import io.reactivex.Flowable;
+
 import java.util.List;
+
+import io.reactivex.Flowable;
 
 @Dao
 public abstract class RedditNowDao {
 
-  // subreddit
+    // subreddit
 
-  @Query("SELECT * FROM SubredditEntity")
-  public abstract Flowable<List<SubredditEntity>> getAllSubreddits();
+    @Query("SELECT * FROM SubredditEntity")
+    public abstract List<SubredditEntity> getAllSubredditsSync();
 
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  public abstract void insertSubreddits(List<SubredditEntity> subredditEntities);
+    @Query("SELECT * FROM SubredditEntity")
+    public abstract Flowable<List<SubredditEntity>> getAllSubreddits();
 
-  @Query("DELETE FROM SubredditEntity")
-  public abstract void deleteAllSubreddits();
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insertSubreddits(List<SubredditEntity> subredditEntities);
 
-  @Transaction
-  public void replaceAllSubreddits(List<SubredditEntity> subredditEntities) {
-    deleteAllSubreddits();
-    insertSubreddits(subredditEntities);
-    deleteAllPosts();
-  }
+    @Query("DELETE FROM SubredditEntity")
+    public abstract void deleteAllSubreddits();
 
-  // posts
+    @Transaction
+    public void replaceAllSubreddits(List<SubredditEntity> subredditEntities) {
+        deleteAllSubreddits();
+        insertSubreddits(subredditEntities);
+        deleteAllPosts();
+    }
 
-  @Query("SELECT * FROM PostEntity WHERE id NOT IN (SELECT id FROM SwipedPostEntity)")
-  public abstract Flowable<List<PostEntity>> getAllActivePosts();
+    // posts
 
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  public abstract void insertPosts(List<PostEntity> postEntities);
+    @Query("SELECT * FROM PostEntity WHERE id NOT IN (SELECT id FROM SwipedPostEntity)")
+    public abstract Flowable<List<PostEntity>> getAllActivePosts();
 
-  @Query("DELETE FROM PostEntity")
-  public abstract void deleteAllPosts();
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insertPosts(List<PostEntity> postEntities);
 
-  @Query("SELECT id FROM SwipedPostEntity")
-  public abstract List<String> getSwipedPostIds();
+    @Query("DELETE FROM PostEntity")
+    public abstract void deleteAllPosts();
 
-  // swiped posts
+    @Query("SELECT id FROM SwipedPostEntity")
+    public abstract List<String> getSwipedPostIds();
 
-  @Insert(onConflict = OnConflictStrategy.REPLACE)
-  public abstract void insertSwipedPosts(SwipedPostEntity... swipedPostEntities);
+    // swiped posts
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    public abstract void insertSwipedPosts(SwipedPostEntity... swipedPostEntities);
 }

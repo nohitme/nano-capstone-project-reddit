@@ -10,6 +10,7 @@ import info.ericlin.redditnow.search.SearchActivity;
 import info.ericlin.redditnow.settings.SettingActivity;
 import info.ericlin.redditnow.settings.SettingFragment;
 import info.ericlin.redditnow.subreddit.SubredditActivity;
+import info.ericlin.redditnow.widget.SubredditWidgetService;
 
 @Module
 abstract class AndroidInjectorModule {
@@ -37,4 +38,7 @@ abstract class AndroidInjectorModule {
 
   @ContributesAndroidInjector
   abstract SettingFragment settingFragment();
+
+  @ContributesAndroidInjector
+  abstract SubredditWidgetService subredditWidgetService();
 }
