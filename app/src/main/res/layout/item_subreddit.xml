@@ -5,20 +5,45 @@
   android:layout_width="match_parent"
   android:layout_height="wrap_content"
   android:foreground="?selectableItemBackground"
-  android:padding="12dp"
+  android:paddingBottom="12dp"
   tools:targetApi="m">
+
+  <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/subreddit_guide_left"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_constraintGuide_begin="12dp" />
+
+  <androidx.constraintlayout.widget.Guideline
+    android:id="@+id/subreddit_guide_right"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    app:layout_constraintGuide_end="12dp" />
+
+  <ImageView
+    android:id="@+id/subreddit_banner"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    android:contentDescription="@null"
+    android:importantForAccessibility="no"
+    app:layout_constraintTop_toTopOf="parent"
+    tools:scaleType="centerCrop"
+    tools:src="@tools:sample/backgrounds/scenic" />
 
   <TextView
     android:id="@+id/subreddit_name"
     style="@style/TextAppearance.MaterialComponents.Subtitle2"
     android:layout_width="0dp"
     android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
     android:maxLines="1"
     app:layout_constrainedWidth="true"
     app:layout_constraintBottom_toTopOf="@id/subreddit_num_subs"
     app:layout_constraintEnd_toStartOf="@id/subreddit_right_arrow"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="@id/subreddit_guide_left"
+    app:layout_constraintTop_toBottomOf="@id/subreddit_banner"
     tools:text="r/Android" />
 
   <TextView
@@ -30,20 +55,21 @@
     app:layout_constrainedWidth="true"
     app:layout_constraintBottom_toTopOf="@id/subreddit_description"
     app:layout_constraintEnd_toStartOf="@id/subreddit_right_arrow"
-    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintStart_toStartOf="@id/subreddit_guide_left"
     app:layout_constraintTop_toBottomOf="@id/subreddit_name"
     tools:text="123, 34 subscribers" />
 
   <TextView
     android:id="@+id/subreddit_description"
     style="@style/TextAppearance.MaterialComponents.Body2"
-    android:layout_width="match_parent"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:layout_marginTop="8dp"
     android:maxLines="3"
+    app:layout_constrainedWidth="true"
     app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="@id/subreddit_guide_right"
+    app:layout_constraintStart_toStartOf="@id/subreddit_guide_left"
     app:layout_constraintTop_toBottomOf="@id/subreddit_num_subs"
     tools:text="@tools:sample/lorem/random" />
 
@@ -51,13 +77,13 @@
     android:id="@+id/subreddit_right_arrow"
     android:layout_width="20dp"
     android:layout_height="20dp"
-    android:layout_marginEnd="24dp"
+    android:layout_marginTop="8dp"
     android:contentDescription="@null"
     android:importantForAccessibility="no"
     android:src="@drawable/ic_arrow_forward_black_24dp"
     app:layout_constraintBottom_toBottomOf="@id/subreddit_num_subs"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintTop_toTopOf="parent" />
+    app:layout_constraintEnd_toEndOf="@id/subreddit_guide_right"
+    app:layout_constraintTop_toBottomOf="@id/subreddit_banner" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.preference.PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+  <androidx.preference.PreferenceCategory android:title="@string/pref_category_home">
+
+    <androidx.preference.ListPreference
+      android:defaultValue="2"
+      android:entries="@array/number_show_entries"
+      android:entryValues="@array/number_show_entries_values"
+      android:icon="@drawable/ic_format_list_numbered_black_24dp"
+      android:key="number_to_show"
+      android:summary="@string/pref_number_show_summary"
+      android:title="@string/pref_number_show_title" />
+
+    <androidx.preference.ListPreference
+      android:defaultValue="5"
+      android:entries="@array/number_fetch_entries"
+      android:entryValues="@array/number_fetch_entries_values"
+      android:icon="@drawable/ic_format_list_numbered_black_24dp"
+      android:key="number_to_fetch"
+      android:summary="@string/pref_number_fetch_summary"
+      android:title="@string/pref_number_fetch_title" />
+
+  </androidx.preference.PreferenceCategory>
+
+  <androidx.preference.PreferenceCategory android:title="@string/pref_category_account">
+
+    <Preference
+      android:icon="@drawable/ic_account_circle_black_24dp"
+      android:key="account_logout"
+      android:title="@string/pref_account_title" />
+
+  </androidx.preference.PreferenceCategory>
+
+</androidx.preference.PreferenceScreen>

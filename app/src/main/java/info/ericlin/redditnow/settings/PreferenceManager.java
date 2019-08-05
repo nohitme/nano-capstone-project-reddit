@@ -4,28 +4,40 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import dagger.Reusable;
 import javax.inject.Inject;
+import timber.log.Timber;
 
 @Reusable
 public class PreferenceManager {
 
-  private static final String SETTINGS_PREF = "settings_pref";
+  private static final int DEFAULT_NUMBER_TO_FETCH = 5;
+  private static final int DEFAULT_NUMBER_TO_SHOW = 2;
 
   private final SharedPreferences sharedPreferences;
 
   @Inject
   public PreferenceManager(Context context) {
-    sharedPreferences = context.getSharedPreferences(SETTINGS_PREF, Context.MODE_PRIVATE);
+    sharedPreferences = androidx.preference.PreferenceManager.getDefaultSharedPreferences(context);
   }
 
-  public final int getNumberPostToPrefetch() {
-    return sharedPreferences.getInt("number_of_prefetch", 5);
+  public final int getNumberPostToFetch() {
+    String number_to_fetch =
+        sharedPreferences.getString("number_to_fetch", String.valueOf(DEFAULT_NUMBER_TO_FETCH));
+    try {
+      return Integer.parseInt(number_to_fetch);
+    } catch (NumberFormatException e) {
+      Timber.w(e, "failed to parse number to fetch");
+      return DEFAULT_NUMBER_TO_FETCH;
+    }
   }
 
   public final int getNumberPostToShow() {
-    return sharedPreferences.getInt("number_of_show", 3);
-  }
-
-  public final boolean isRedditAppPreferred() {
-    return sharedPreferences.getBoolean("prefer_reddit_app", true);
+    String number_to_show =
+        sharedPreferences.getString("number_to_show", String.valueOf(DEFAULT_NUMBER_TO_SHOW));
+    try {
+      return Integer.parseInt(number_to_show);
+    } catch (NumberFormatException e) {
+      Timber.w(e, "failed to parse number to show");
+      return DEFAULT_NUMBER_TO_SHOW;
+    }
   }
 }

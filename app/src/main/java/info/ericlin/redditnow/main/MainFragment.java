@@ -28,6 +28,7 @@ import info.ericlin.redditnow.recyclerview.RedditListAdapter;
 import info.ericlin.redditnow.recyclerview.RedditListItem;
 import info.ericlin.redditnow.recyclerview.SubredditViewHolder;
 import info.ericlin.redditnow.search.SearchActivity;
+import info.ericlin.redditnow.settings.SettingActivity;
 import info.ericlin.redditnow.subreddit.SubredditActivity;
 import javax.inject.Inject;
 import org.greenrobot.eventbus.EventBus;
@@ -38,6 +39,8 @@ import org.greenrobot.eventbus.ThreadMode;
  * Displays a list of subreddits that the user follows and top N posts of each subreddit.
  */
 public class MainFragment extends DaggerFragment {
+
+  private static final int REQUEST_CODE_SETTINGS = 139;
 
   @Nullable
   private Unbinder unbinder;
@@ -87,6 +90,15 @@ public class MainFragment extends DaggerFragment {
 
     toolbar.setTitle(R.string.app_name);
     toolbar.setTitleTextColor(Color.WHITE);
+    toolbar.inflateMenu(R.menu.menu_settings);
+    toolbar.setOnMenuItemClickListener(item -> {
+      if (item.getItemId() == R.id.menu_item_settings) {
+        Intent intent = new Intent(requireContext(), SettingActivity.class);
+        startActivityForResult(intent, REQUEST_CODE_SETTINGS);
+        return true;
+      }
+      return false;
+    });
 
     floatingActionButton.setOnClickListener(fab -> {
       Intent intent = new Intent(getContext(), SearchActivity.class);
@@ -137,6 +149,20 @@ public class MainFragment extends DaggerFragment {
   public void onClickSubredditEvent(SubredditViewHolder.OnClickSubredditEvent event) {
     Intent intent = SubredditActivity.newIntent(requireContext(), event.subreddit().name);
     startActivity(intent);
+  }
+
+  @Override
+  public void onActivityResult(int requestCode, int resultCode, Intent data) {
+    if (requestCode == REQUEST_CODE_SETTINGS) {
+      if (resultCode == SettingActivity.SETTINGS_CHANGED) {
+        mainViewModel.updateHomeFeed();
+      } else if (resultCode == SettingActivity.SETTINGS_LOGOUT) {
+        requireActivity().recreate();
+      }
+      return;
+    }
+
+    super.onActivityResult(requestCode, resultCode, data);
   }
 
   private final ItemTouchHelper itemTouchHelper =

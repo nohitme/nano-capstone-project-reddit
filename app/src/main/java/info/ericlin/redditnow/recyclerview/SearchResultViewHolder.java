@@ -15,12 +15,16 @@ import com.google.common.base.Strings;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import info.ericlin.redditnow.R;
 import info.ericlin.redditnow.room.SubredditEntity;
 import info.ericlin.redditnow.search.SearchResultItem;
 import timber.log.Timber;
+
+import static android.media.CamcorderProfile.get;
 
 public class SearchResultViewHolder extends RedditViewHolder<SearchResultItem> {
 
@@ -47,6 +51,17 @@ public class SearchResultViewHolder extends RedditViewHolder<SearchResultItem> {
         subredditNumSubs.setText(context.getString(R.string.vh_subreddit_members, item.numberOfSubscribers()));
 
         updateSubscriptionStatus(item.name(), item.isSubscribed());
+    }
+
+    @Override
+    protected void bind(@NonNull SearchResultItem item, @NonNull List<Object> payloads) {
+        if (!payloads.isEmpty()) {
+            boolean isSubscribed = (boolean) payloads.get(0);
+            updateSubscriptionStatus(item.name(), isSubscribed);
+            return;
+        }
+
+        super.bind(item, payloads);
     }
 
     private void updateSubscriptionStatus(String subredditName, boolean isCurrentlySubscribed) {

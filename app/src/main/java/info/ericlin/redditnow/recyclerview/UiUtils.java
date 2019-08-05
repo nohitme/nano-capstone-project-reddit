@@ -1,9 +1,15 @@
 package info.ericlin.redditnow.recyclerview;
 
 import android.graphics.Color;
+import android.webkit.URLUtil;
 import androidx.annotation.ColorInt;
+import com.google.common.base.Strings;
+import info.ericlin.redditnow.room.SubredditEntity;
 
 public class UiUtils {
+
+  private static final String DEFAULT_BANNER_URL =
+      "https://redditupvoted.files.wordpress.com/2017/02/upvoted_banner-green-plain.jpg";
 
   private UiUtils() {
     //no instance
@@ -39,5 +45,13 @@ public class UiUtils {
 
   private static int lightenColor(@ColorInt int color, double fraction) {
     return (int) Math.min(color + (color * fraction), 255);
+  }
+
+  public static String getSubredditBannerImageUrl(SubredditEntity subredditEntity) {
+    if (URLUtil.isValidUrl(Strings.nullToEmpty(subredditEntity.bannerImageUrl))) {
+      return subredditEntity.bannerImageUrl;
+    }
+
+    return DEFAULT_BANNER_URL;
   }
 }

@@ -97,7 +97,7 @@ public class MainFeedDataManager {
 
       SubredditReference subreddit = redditClient.subreddit(subredditEntity.name);
 
-      int numberPostToPrefetch = preferenceManager.getNumberPostToPrefetch();
+      int numberPostToPrefetch = preferenceManager.getNumberPostToFetch();
       int queryLimit = (int) (numberPostToPrefetch * 1.5);
 
       Iterator<Listing<Submission>> iterator =
